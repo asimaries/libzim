@@ -178,6 +178,23 @@ namespace zim
     }
   }
 
+  Entry Archive::getRandomEntry() const {
+    auto frontEntryCount = m_impl->getFrontEntryCount().v;
+    int watchdog = 42;
+    while(--watchdog) {
+      auto idx = ((double)rand() / ((double)RAND_MAX+1)) * frontEntryCount;
+      auto entry = getEntryByTitle(idx);
+      auto item = entry.getItem(true);
+      std::cerr << item.getPath() << "=>" << item.getMimetype() << std::endl;
+
+      if (item.getMimetype().find("text/html") == std::string::npos) {
+        continue;
+      }
+      return entry;
+    }
+    throw EntryNotFound("Cannot found valid random entry");
+  }
+
   bool Archive::hasFulltextIndex() const {
     auto r = m_impl->findx('X', "fulltext/xapian");
     if (!r.first) {

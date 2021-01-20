@@ -335,6 +335,11 @@ sectionSubReader(const FileReader& zimReader, const std::string& sectionName,
     return mp_titleDirentAccessor->getDirectIndex(idx);
   }
 
+  entry_index_t FileImpl::getFrontEntryCount() const
+  {
+    return entry_index_t(mp_titleDirentAccessor->getDirentCount().v);
+  }
+
   entry_index_t FileImpl::getIndexByClusterOrder(entry_index_t idx) const
   {
       std::call_once(orderOnceFlag, [this]
