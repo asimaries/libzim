@@ -162,6 +162,25 @@ TEST(ZimArchive, openRealZimArchive)
   }
 }
 
+TEST(ZimArchive, randomEntry)
+{
+  const char* const zimfiles[] = {
+    "small.zim",
+    "wikibooks_be_all_nopic_2017-02.zim",
+    "wikibooks_be_all_nopic_2017-02_splitted.zim",
+    "wikipedia_en_climate_change_nopic_2020-01.zim"
+  };
+
+  for ( const std::string fname : zimfiles ) {
+    const auto path = zim::DEFAULTFS::join("data", fname);
+    const TestContext ctx{ {"path", path } };
+    const zim::Archive archive(path);
+    const auto randomEntry = archive.getRandomEntry();
+    const auto item = randomEntry.getItem(true);
+    ASSERT_TRUE(item.getMimetype().find("text/html") != std::string::npos) << ctx;
+  }
+}
+
 class CapturedStderr
 {
   std::ostringstream buffer;
